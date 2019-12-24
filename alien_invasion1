@@ -1,0 +1,6 @@
+#Alien_invasion1
+
+class AlienInvasion:
+	"""general class for alien invasion game"""
+	def __init__(self):
+	
