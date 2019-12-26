@@ -4,8 +4,8 @@ import sys
 
 import pygame
 
-from ship import Ship
-from bullet import Bullet
+from ship4 import Ship
+from bullet4 import Bullet
 from settings import Settings
 
 class AlienInvasion:
@@ -44,10 +44,10 @@ class AlienInvasion:
 			
 	def _check_events_KEYDOWN(self,event):
 		"""check keydown events"""
-		if event.key == pygame.K_RIGHT:
-			self.ship.moving_right= True
-		if event.key == pygame.K_LEFT:
-			self.ship.moving_left= True
+		if event.key == pygame.K_UP:
+			self.ship.moving_up= True
+		if event.key == pygame.K_DOWN:
+			self.ship.moving_down= True
 		if event.key == pygame.K_SPACE:
 			self._fire_bullet()
 		elif event.key == pygame.K_q:
@@ -57,10 +57,10 @@ class AlienInvasion:
 				
 	def _check_events_KEYUP(self,event):
 		"""check keydown events"""
-		if event.key == pygame.K_RIGHT:
-			self.ship.moving_right = False
-		if event.key == pygame.K_LEFT:
-			self.ship.moving_left = False
+		if event.key == pygame.K_UP:
+			self.ship.moving_up= False
+		if event.key == pygame.K_DOWN:
+			self.ship.moving_down= False
 			
 	def _fire_bullet(self):
 		"""Create a new bullet and add it to the bullets group"""
@@ -74,7 +74,7 @@ class AlienInvasion:
 		self.bullets.update()
 		#get rid of bullets when they have dissapeared.
 		for bullet in self.bullets.copy():
-			if bullet.rect.bottom <= 0:
+			if bullet.rect.right >= 1200:
 				self.bullets.remove(bullet)
 #		print(len(self.bullets))	- to see if they are being deleted
 
