@@ -5,9 +5,15 @@ import sys
 import pygame
 
 from ship import Ship
+from stars import Star
 from bullet import Bullet
 from alien import Alien
 from settings import Settings
+
+from random import randint
+x = randint(1,6)
+
+	
 
 class AlienInvasion:
 	"""Overall class to manage game assets and behaviour"""
@@ -26,6 +32,8 @@ class AlienInvasion:
 		self.bullets = pygame.sprite.Group()
 		self.aliens = pygame.sprite.Group()
 		self._create_fleet()
+		self.stars = pygame.sprite.Group()
+		self._create_stars()
 		
 	def run_game(self):
 		"""start the main loop for the game."""
@@ -86,32 +94,84 @@ class AlienInvasion:
 		#make an alien and find the number of aliens in a row
 		#spacing between each alien is equal to one alien width
 		alien = Alien(self)
-		alien_width = alien.rect.width
+		alien_width, alien_height = alien.rect.size
 		available_space_x = self.settings.screen_width - (1 * alien_width)
 		number_aliens_x = available_space_x // (2 * alien_width)
-				
-		#create the first row of aliens.
-		for alien_number in range(number_aliens_x):
-			self._create_alien(alien_number)
+		
+		#determine the number of rows of aliens that fit on the screen
+		ship_height = self.ship.rect.height
+		available_space_y = (self.settings.screen_height -
+								(2 * alien_height) - ship_height)
+		number_rows = available_space_y // (2 * alien_height)
+						
+		#create the full fleet of aliens.
+		for row_number in range(number_rows):
+			for alien_number in range(number_aliens_x):
+				self._create_alien(alien_number, row_number)
 			
 			
-	def _create_alien(self, alien_number):
+	def _create_alien(self, alien_number, row_number):
 		#create an alien and place it in the row.
 		alien = Alien(self)
-		alien_width = alien.rect.width
+		alien_width, alien_height = alien.rect.size
 		alien.x = alien_width + 2 * alien_width * alien_number
 		alien.rect.x = alien.x
+		alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
 		self.aliens.add(alien)
 			
+
+	def _create_stars(self):
+		#make a star and find the number of stars in a row
+		star = Star(self)
+		star_width, start_height = star.rect.size
+		
+		#determine the amount of stars in a row
+		available_space_x = self.settings.screen_width 
+		number_stars_x = available_space_x // ( 1 * star_width)
+		#determine the number of rows
+		available_space_y = self.settings.screen_height
+		number_rows = available_space_y // (1 * star.rect.height)
+		
+		for row_number in range(number_rows):
+			for star_number in range(number_stars_x):
+				self._create_star(star_number, row_number)
+				
+		
+					
+	def _create_star(self, star_number, row_number):
+		"""create a star and place it in the row"""
+		star = Star(self)
+		star_width, star_height = star.rect.size
+		star.x = ten.roll_die() + star_width * star_number
+		star.rect.x = star.x
+		star.rect.y = ten.roll_die() + star.rect.height * row_number
+		self.stars.add(star)
+					
+					
+
+	
 	def _update_screen(self):
 		"""update the screen size"""
 		self.screen.fill(self.settings.bg_color)
+		self.stars.draw(self.screen)
 		self.ship.blitme()
 		self.aliens.draw(self.screen)
+		
 		for bullet in self.bullets.sprites():
 			bullet.draw_bullet()
 			
 		pygame.display.flip()
+		
+		
+class Die():
+	def __init__(self,sides=6):
+		self.sides = sides
+		
+	def roll_die(self):
+		return(randint(1,self.sides))
+
+ten = Die(10)
+
 			
 if __name__ == '__main__':
 	#make a game instance, and run the game.
