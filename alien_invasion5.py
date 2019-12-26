@@ -9,7 +9,7 @@ from stars import Star
 from bullet import Bullet
 from alien import Alien
 from settings import Settings
-
+from rain import Rain
 from random import randint
 x = randint(1,6)
 
@@ -34,6 +34,8 @@ class AlienInvasion:
 		self._create_fleet()
 		self.stars = pygame.sprite.Group()
 		self._create_stars()
+		self.rains = pygame.sprite.Group()
+		self._create_rains()
 		
 	def run_game(self):
 		"""start the main loop for the game."""
@@ -43,6 +45,7 @@ class AlienInvasion:
 			self.ship.update()
 			self._update_bullets()
 			self._update_aliens()
+			self._update_rains()
 			
 	def _check_events(self):
 		#watch for keyboard and mouse events
@@ -168,13 +171,57 @@ class AlienInvasion:
 		star.rect.y = (star.rect.height * ten.roll_die()) * row_number
 		self.stars.add(star)
 				
-					
+#***************************************************** RAIN
 
+
+	def _create_rains(self):
+		#make a raindrop and find the number of rains in a row
+		rain = Rain(self)
+		rain_width, rain_height = rain.rect.size
+		
+		#determine the amount of stars in a row
+		available_space_x = self.settings.screen_width 
+		number_rains_x = available_space_x // rain_width
+		#determine the number of rows
+		available_space_y = self.settings.screen_height
+		number_rows = available_space_y //(2 * rain_height)
+		
+		for row_number in range(number_rows):
+			for rain_number in range(number_rains_x):
+				self._create_rain(rain_number, row_number)
+				
+				
+		
+					
+	def _create_rain(self, rain_number, row_number):
+		"""create a rain and place it in the row"""
+		rain = Rain(self)
+		rain_width, rain_height = rain.rect.size
+		rain.x = (rain_width * hunit.roll_die()) * rain_number
+		rain.y = rain.rect.height * row_number
+		rain.rect.x = rain.x
+		rain.rect.y = rain.y
+		self.rains.add(rain)
+		
+	def _update_rains(self):
+		"""update position of bullets and get rid of old bullets."""
+		#update rain positions
+		self.rains.update()
+		#get rid of raindrops when they have dissapeared.
+		for rain in self.rains.copy():
+			if rain.rect.bottom >= 850:
+				self.rains.remove(rain)
+				if len(self.rains) <= self.settings.rains_allowed:
+					self._create_rains()		
+
+
+#*****************************************************
 	
 	def _update_screen(self):
 		"""update the screen size"""
 		self.screen.fill(self.settings.bg_color)
 		self.stars.draw(self.screen)
+		self.rains.draw(self.screen)
 		self.ship.blitme()
 		self.aliens.draw(self.screen)
 
@@ -193,7 +240,7 @@ class Die():
 		return(randint(1,self.sides))
 
 ten = Die(10)
-
+hunit = Die(30)
 			
 if __name__ == '__main__':
 	#make a game instance, and run the game.
