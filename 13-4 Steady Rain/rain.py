@@ -18,7 +18,7 @@ class Rain(Sprite):
 		self.settings = ai_game.settings
 		
 		#start each new raindrop at the top left, above the screen
-		self.rect.x = 0
+		self.rect.x = 0 
 		self.rect.y = -100
 		#store the rains position as a decimal value
 		self.y = float(self.rect.y)
@@ -42,9 +42,3 @@ class Rain(Sprite):
 		
 		#the rain class doesnt need a method for drawing it to the screen
 		#instead we'll use a pygame group method that will draw all the elements
-
-
-#determining how many aliens will fit in a row
-#		available_space_x = settings.screen_width – (2 * alien_width)
-# We also need to set the spacing between aliens; we’ll make it one alien width.
-# 		number_aliens_x = available_space_x // (2 * alien_width)

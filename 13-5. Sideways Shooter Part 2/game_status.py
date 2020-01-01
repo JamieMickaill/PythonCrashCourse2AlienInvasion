@@ -1,6 +1,7 @@
-#game_stats.py
+#game_status.py
 from settings import Settings
 import pygame
+
 
 class GameStats:
 	"""Track statistics for Alien Invasion"""
@@ -15,5 +16,5 @@ class GameStats:
 	def reset_stats(self):
 		"""initialize statistics than can change during the game"""
 		self.ships_left = self.settings.ship_limit
-		
-		
+		self.total_times_hit = 0
+		self.kill_count = 0

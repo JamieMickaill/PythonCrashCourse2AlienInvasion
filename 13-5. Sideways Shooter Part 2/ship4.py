@@ -21,7 +21,6 @@ class Ship:
 		self.rect.midleft = self.screen_rect.midleft
 		
 		#store a decimal value for the ship's horizontal position.
-		self.x = float(self.rect.x)
 		self.y = float(self.rect.y)
 		
 		#movement flag
@@ -37,8 +36,7 @@ class Ship:
 		if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
 			self.y += self.settings.ship_speed
 			
-		#update rect object from self
-		self.rect.x = self.x
+
 		self.rect.y = self.y
 	
 	def blitme(self):
